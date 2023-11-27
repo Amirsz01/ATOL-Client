@@ -139,7 +139,9 @@ class Item implements \JsonSerializable
 
     private $sum = 0.0;
 
-    private $vat = null;
+    private $vat;
+
+    private $vatSum;
 
     private $name = '';
 
@@ -180,11 +182,11 @@ class Item implements \JsonSerializable
      * @param string $name
      * @param float $price
      * @param float $quantity
-     * @param Vat $vat
+     * @param string $vat
      * @param string $payment_object
      * @param string $payment_method
      */
-    public function __construct(string $name, float $price, float $quantity, Vat $vat, $payment_object = 0, string $payment_method = PaymentMethod::FULL_PAYMENT)
+    public function __construct(string $name, float $price, float $quantity, string $vat, $payment_object = 0, string $payment_method = PaymentMethod::FULL_PAYMENT)
     {
         $this->setName($name);
         $this->setPrice($price);
@@ -206,7 +208,10 @@ class Item implements \JsonSerializable
             'price' => $this->getPrice(),
             'quantity' => $this->getQuantity(),
             'sum' => $this->getSum(),
-            'vat' => $this->getVat(),
+            'vat' => [
+                'type' => $this->getVat(),
+                'sum' => $this->getVatSum(),
+            ],
             'payment_object' => $this->getPaymentObject(),
             'payment_method' => $this->getPaymentMethod(),
             'agent_info' => $this->getAgentInfo(),
@@ -322,22 +327,73 @@ class Item implements \JsonSerializable
     }
 
     /**
-     * @return Vat|null
+     * @return string|null
      */
-    public function getVat(): ?Vat
+    public function getVat(): ?string
     {
         return $this->vat;
     }
 
     /**
-     * @param Vat $vat
+     * @param string $vat
      *
      * @return Item
      */
-    public function setVat(Vat $vat): self
+    public function setVat(string $vat): Item
     {
+
         $this->vat = $vat;
+        switch ($vat) {
+            case (Vat::TAX_VAT110):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 10 / 110);
+                break;
+            case (Vat::TAX_VAT118):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 18 / 118);
+                break;
+            case (Vat::TAX_VAT10):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 0.1);
+                break;
+            case (Vat::TAX_VAT10Z):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 10 / 110);
+                $this->vat = Vat::TAX_VAT10;
+                break;
+            case (Vat::TAX_VAT18):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 0.18);
+                break;
+            case (Vat::TAX_VAT20):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 0.2);
+                break;
+            case (Vat::TAX_VAT20Z):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 20 / 120);
+                $this->vat = Vat::TAX_VAT20;
+                break;
+            case (Vat::TAX_VAT120):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 20 / 120);
+                break;
+            case (Vat::TAX_VAT0):
+            case (Vat::TAX_NONE):
+            default:
+                $this->setVatSum(0);
+        }
+
         return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getVatSum(): float
+    {
+        return $this->vatSum;
+    }
+
+
+    /**
+     * @param float $vatSum
+     */
+    public function setVatSum(float $vatSum): void
+    {
+        $this->vatSum = round($vatSum, 2);
     }
 
 

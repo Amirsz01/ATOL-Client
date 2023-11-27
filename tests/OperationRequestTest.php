@@ -27,28 +27,30 @@ class OperationRequestTest extends TestCase
         $price = 1200.00;
         $quantity = 3;
         $sum = $price * $quantity;
-        $vat = new Vat(Vat::TAX_VAT120, round($sum * 20 / 120, 2));
         $payment_object = 0;
         $payment_method = 'full_payment';
         $measure = 0;
 
-        $item = new Item($title, $price, $quantity, $vat);
+        $item = new Item($title, $price, $quantity, Vat::TAX_VAT120);
 
         $this->assertEquals($title, $item->getName());
         $this->assertEquals($price, $item->getPrice());
         $this->assertEquals($quantity, $item->getQuantity());
         $this->assertEquals($sum, $item->getSum());
-        $this->assertEquals($vat, $item->getVat());
+        $this->assertEquals(Vat::TAX_VAT120, $item->getVat());
         $this->assertEquals(
             [
                 'name'             => $title,
                 'price'            => $price,
                 'quantity'         => $quantity,
                 'sum'              => $sum,
-                'vat'              => $vat,
+                'vat'              => [
+                    'type' => Vat::TAX_VAT120,
+                    'sum' => $price * 3 * 20 / 120
+                ],
                 'payment_object'   => $payment_object,
                 'payment_method'   => $payment_method,
-                'measure' => 0,
+                'measure'          => $measure,
             ],
             $item->jsonSerialize()
         );
