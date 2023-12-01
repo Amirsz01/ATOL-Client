@@ -12,130 +12,7 @@ namespace Grokhotov\ATOL\Object;
 class Item implements \JsonSerializable
 {
 
-    /**
-     * товар
-     */
-    public const PAYMENT_OBJECT_COMMODITY = 'commodity';
-
-    /**
-     * подакцизный товар
-     */
-    public const PAYMENT_OBJECT_EXCISE = 'excise';
-
-    /**
-     * работа
-     */
-    public const PAYMENT_OBJECT_JOB = 'job';
-
-    /**
-     * услуга
-     */
-    public const PAYMENT_OBJECT_SERVICE = 'service';
-
-    /**
-     * ставка азартной игры
-     */
-    public const PAYMENT_OBJECT_GAMBLING_BET = 'gambling_bet';
-
-    /**
-     * выигрыш азартной игры
-     */
-    public const PAYMENT_OBJECT_GAMBLING_PRIZE = 'gambling_prize';
-
-    /**
-     * лотерейный билет
-     */
-    public const PAYMENT_OBJECT_LOTTERY = 'lottery';
-
-    /**
-     * выигрыш лотереи
-     */
-    public const PAYMENT_OBJECT_LOTTERY_PRIZE = 'lottery_prize';
-
-    /**
-     * предоставление результатов интеллектуальной деятельности
-     */
-    public const PAYMENT_OBJECT_INTELLECTUAL_ACTIVITY = 'intellectual_activity';
-
-    /**
-     * платеж
-     */
-    public const PAYMENT_OBJECT_PAYMENT = 'payment';
-
-    /**
-     * агентское вознаграждение
-     */
-    public const PAYMENT_OBJECT_AGENT_COMMISSION = 'agent_commission';
-
-    /**
-     * составной предмет расчета
-     */
-    public const PAYMENT_OBJECT_COMPOSITE = 'composite';
-
-    /**
-     * иной предмет расчета
-     */
-    public const PAYMENT_OBJECT_ANOTHER = 'another';
-
-    /**
-     * имущественное право
-     */
-    public const PAYMENT_OBJECT_PROPERTY_RIGHT = 'property_right';
-
-    /**
-     * внереализационный доход
-     */
-    public const PAYMENT_OBJECT_NON_OPERATING_GAIN = 'non-operating_gain';
-
-    /**
-     * страховые взносы
-     */
-    public const PAYMENT_OBJECT_INSURANCE_PREMIUM = 'insurance_premium';
-
-    /**
-     * торговый сбор
-     */
-    public const PAYMENT_OBJECT_SALES_TAX = 'sales_tax';
-
-    /**
-     * курортный сбор
-     */
-    public const PAYMENT_OBJECT_RESORT_FEE = 'resort_fee';
-
-    /**
-     *  предоплата 100%. Полная предварительная оплата до момента передачи предмета расчета
-     */
-    public const PAYMENT_METHOD_FULL_PREPAYMENT = 'full_prepayment';
-
-    /**
-     * предоплата. Частичная предварительная оплата до момента передачи предмета расчета
-     */
-    public const PAYMENT_METHOD_PREPAYMENT = 'prepayment';
-
-    /**
-     * аванс
-     */
-    public const PAYMENT_METHOD_ADVANCE = 'advance';
-
-    /**
-     * полный расчет. Полная оплата, в том числе с учетом аванса (предварительной оплаты) в момент передачи предмета расчета.
-     */
-    public const PAYMENT_METHOD_FULL_PAYMENT = 'full_payment';
-
-    /**
-     *  частичный расчет и кредит. Частичная оплата предмета расчета в момент его передачи с последующей оплатой в кредит.
-     */
-    public const PAYMENT_METHOD_PARTIAL_PAYMENT = 'partial_payment';
-
-    /**
-     * передача в кредит. Передача предмета расчета без его оплаты в момент его передачи с последующей оплатой в кредит
-     */
-    public const PAYMENT_METHOD_CREDIT = 'credit';
-
-    /**
-     * оплата кредита. Оплата предмета расчета после его передачи с оплатой в кредит (оплата кредита)
-     */
-    public const PAYMENT_METHOD_CREDIT_PAYMENT = 'credit_payment';
+    private const MARK_PROCESSING_MODE = 0;
 
     private $sum = 0.0;
 
@@ -177,16 +54,33 @@ class Item implements \JsonSerializable
 
 
     /**
+     * Информация о маркировке
+     *
+     * @var string
+     */
+    private $mark;
+
+
+    /**
      * Продаваемый товар по чеку.
      *
      * @param string $name
      * @param float $price
      * @param float $quantity
      * @param string $vat
-     * @param string $payment_object
+     * @param int $payment_object
      * @param string $payment_method
+     * @param string|null $mark
      */
-    public function __construct(string $name, float $price, float $quantity, string $vat, $payment_object = 0, string $payment_method = PaymentMethod::FULL_PAYMENT)
+    public function __construct(
+        string  $name,
+        float   $price,
+        float   $quantity,
+        string  $vat,
+        int     $payment_object = 0,
+        string  $payment_method = PaymentMethod::FULL_PAYMENT,
+        ?string $mark = null
+    )
     {
         $this->setName($name);
         $this->setPrice($price);
@@ -195,6 +89,7 @@ class Item implements \JsonSerializable
         $this->setSum(round($price * $quantity, 2));
         $this->setPaymentObject($payment_object);
         $this->setPaymentMethod($payment_method);
+        $this->setMark($mark);
     }
 
 
@@ -203,7 +98,7 @@ class Item implements \JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return array_filter([
+        $result = [
             'name' => $this->getName(),
             'price' => $this->getPrice(),
             'quantity' => $this->getQuantity(),
@@ -217,7 +112,14 @@ class Item implements \JsonSerializable
             'agent_info' => $this->getAgentInfo(),
             'measure' => $this->getMeasure(),
             'supplier_info' => $this->getSupplierInfo(),
-        ], static function ($property) {
+        ];
+
+        if ($this->getMark()) {
+            $result['mark_code'] = $this->getMark();
+            $result['mark_processing_mode'] = self::MARK_PROCESSING_MODE;
+        }
+
+        return array_filter($result, static function ($property) {
             return !is_null($property);
         });
     }
@@ -477,6 +379,34 @@ class Item implements \JsonSerializable
     public function setMeasure(int $measure): self
     {
         $this->measure = $measure;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMark(): ?string
+    {
+        return $this->mark;
+    }
+
+
+    /**
+     * @param string|null $mark
+     *
+     * @return Item
+     */
+    public function setMark(?string $mark): self
+    {
+        if ($mark && strlen($mark) > 50) {
+            $this->mark = ['gs1m' => $mark];
+        } else {
+            if (strpos($mark, '==') === strlen($mark) - 2) {
+                $mark = base64_decode($mark);
+            }
+            $this->mark = ['short' => $mark];
+        }
+
         return $this;
     }
 }

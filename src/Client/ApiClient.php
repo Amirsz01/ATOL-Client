@@ -28,6 +28,7 @@ use function json_last_error;
 class ApiClient implements IClient
 {
     private const API_URL = 'https://online.atol.ru/possystem/';
+    private const TEST_API_URL = 'https://testonline.atol.ru/possystem/';
 
     private $http;
 

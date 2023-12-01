@@ -15,7 +15,7 @@ Fork: ssitdikov/atol
 Предполагается установка с использованием composer
 
 ```
-composer require ssitdikov/atol
+composer require grokhotov/atol
 ```
 
 ## Пример использования
