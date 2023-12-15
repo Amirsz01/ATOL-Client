@@ -89,7 +89,9 @@ class Item implements \JsonSerializable
         $this->setSum(round($price * $quantity, 2));
         $this->setPaymentObject($payment_object);
         $this->setPaymentMethod($payment_method);
-        $this->setMark($mark);
+        if ($mark) {
+            $this->setMark($mark);
+        }
     }
 
 
@@ -400,7 +402,7 @@ class Item implements \JsonSerializable
     {
         if ($mark && strlen($mark) > 50) {
             $this->mark = ['gs1m' => $mark];
-        } else {
+        } elseif ($mark) {
             if (strpos($mark, '==') === strlen($mark) - 2) {
                 $mark = base64_decode($mark);
             }
