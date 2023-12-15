@@ -43,22 +43,22 @@ class ApiClient implements IClient
      *
      * @param Client|null $client
      */
-    public function __construct(Client $client = null, $version = 'v5')
+    public function __construct(Client $client = null, $version = 'v5', bool $isTest = false)
     {
         $this->http = $client;
 
         if (null === $client) {
             $this->http = new Client([
-                'base_uri' => self::API_URL . $version . "/",
+                'base_uri' => ($isTest ? self::TEST_API_URL : self::API_URL) . $version . "/",
             ]);
         }
     }
 
-    public static function createClient(string $version = 'v5'): ApiClient
+    public static function createClient(string $version = 'v5', bool $isTest = false): ApiClient
     {
         return new self(
             new Client([
-                'base_uri' => self::API_URL . $version . "/",
+                'base_uri' => ($isTest ? self::TEST_API_URL : self::API_URL) . $version . "/",
             ])
         );
     }
