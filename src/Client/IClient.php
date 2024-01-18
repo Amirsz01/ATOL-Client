@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Grokhotov\ATOL\Client;
 
-use Grokhotov\ATOL\Request\CorrectionRequest;
 use Grokhotov\ATOL\Request\OperationRequest;
 use Grokhotov\ATOL\Request\ReportRequest;
 use Grokhotov\ATOL\Request\RequestInterface;
@@ -42,14 +41,6 @@ interface IClient
      * @return OperationResponse
      */
     public function doOperation(OperationRequest $request): OperationResponse;
-
-
-    /**
-     * @param CorrectionRequest $request
-     *
-     * @return OperationResponse
-     */
-    public function doCorrection(CorrectionRequest $request): OperationResponse;
 
 
     /**

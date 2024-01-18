@@ -168,17 +168,6 @@ class ApiClient implements IClient
         );
     }
 
-
-    public function doCorrection(CorrectionRequest $request): OperationResponse
-    {
-        return $request->getResponse(
-            json_decode($this->makeRequest(
-                $request
-            ), false)
-        );
-    }
-
-
     /**
      * @param ReportRequest $request
      *

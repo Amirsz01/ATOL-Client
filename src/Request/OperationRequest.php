@@ -39,17 +39,6 @@ class OperationRequest implements RequestInterface
 
     private $operation;
 
-
-    /**
-     * OperationRequest constructor.
-     *
-     * @param               $groupId
-     * @param               $operation
-     * @param               $uuid
-     * @param Receipt       $receipt
-     * @param Info          $info
-     * @param TokenResponse $token
-     */
     public function __construct(
         $groupId,
         $operation,
@@ -57,7 +46,8 @@ class OperationRequest implements RequestInterface
         Receipt $receipt,
         Info $info,
         TokenResponse $token
-    ) {
+    )
+    {
         $this->groupId = $groupId;
         $this->operation = $operation;
         $this->uuid = $uuid;
@@ -81,12 +71,20 @@ class OperationRequest implements RequestInterface
      */
     public function getParams(): array
     {
+        $isCorrection = in_array($this->operation, [
+            self::OPERATION_SELL_CORRECTION,
+            self::OPERATION_SELL_REFUND_CORRECTION,
+            self::OPERATION_BUY_REFUND_CORRECTION,
+            self::OPERATION_BUY_CORRECTION,
+        ], true);
+
+        $receiptProperty = $isCorrection ? 'correction' : 'receipt';
         return [
             'json' => [
-                'timestamp'   => date('d.m.Y H:i:s'),
+                'timestamp' => date('d.m.Y H:i:s'),
                 'external_id' => $this->uuid,
-                'service'     => $this->info,
-                'receipt'     => $this->receipt,
+                'service' => $this->info,
+                $receiptProperty => $this->receipt,
             ],
             'headers' => [
                 'Token' => $this->token,
@@ -107,9 +105,9 @@ class OperationRequest implements RequestInterface
     /**
      * @param $response
      *
-     * @throws Exception
      * @return OperationResponse
      *
+     * @throws Exception
      */
     public function getResponse($response): ResponseInterface
     {
