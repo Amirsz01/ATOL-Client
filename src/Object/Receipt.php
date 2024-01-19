@@ -80,6 +80,7 @@ class Receipt implements \JsonSerializable
      * @var string
      */
     private $additional_check_props;
+    private $isCorrection = false;
 
 
     /**
@@ -344,22 +345,55 @@ class Receipt implements \JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function isCorrection(): bool
+    {
+        return $this->isCorrection;
+    }
+
+    /**
+     * @param bool $isCorrection
+     * @return Receipt
+     */
+    public function setIsCorrection(bool $isCorrection): self
+    {
+        $this->isCorrection = $isCorrection;
+
+        return $this;
+    }
+
+
+    /**
      * @return array
      */
     public function jsonSerialize(): array
     {
         return array_filter([
-            'client'            => $this->getClient(),
-            'company'           => $this->getCompany(),
-            'items'             => $this->getItems(),
-            'total'             => $this->getTotal(),
-            'payments'          => $this->getPayments(),
-            'cashier '          => $this->getCashier(),
-            'vats'              => $this->getVats(),
-            'agent_info'        => $this->getAgentInfo(),
-            'supplier_info'     => $this->getSupplierInfo()
-        ], function ($property) {
+            'client' => $this->getClient(),
+            'company' => $this->getCompany(),
+            'items' => $this->getItems(),
+            'total' => $this->getTotal(),
+            'payments' => $this->getPayments(),
+            'cashier ' => $this->getCashier(),
+            'vats' => $this->getVats(),
+            'agent_info' => $this->getAgentInfo(),
+            'supplier_info' => $this->getSupplierInfo(),
+            'correction_info' => $this->getCorrectionInfo()
+        ], static function ($property) {
             return !is_null($property);
         });
+    }
+
+    private function getCorrectionInfo(): ?array
+    {
+        if (!$this->isCorrection) {
+            return null;
+        }
+
+        return [
+            'type' => 'self',
+            'base_date' => date('d.m.Y'),
+        ];
     }
 }

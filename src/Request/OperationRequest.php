@@ -79,6 +79,7 @@ class OperationRequest implements RequestInterface
         ], true);
 
         $receiptProperty = $isCorrection ? 'correction' : 'receipt';
+        $this->receipt->setIsCorrection($isCorrection);
 
         $params = [
             'timestamp' => date('d.m.Y H:i:s'),
@@ -86,13 +87,6 @@ class OperationRequest implements RequestInterface
             'service' => $this->info,
             $receiptProperty => $this->receipt,
         ];
-
-        if ($isCorrection) {
-            $params['correction_info'] = [
-                'type' => 'self',
-                'base_date' => date('d.m.Y')
-            ];
-        }
 
         return [
             'json' => $params,
