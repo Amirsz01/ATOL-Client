@@ -79,13 +79,23 @@ class OperationRequest implements RequestInterface
         ], true);
 
         $receiptProperty = $isCorrection ? 'correction' : 'receipt';
+
+        $params = [
+            'timestamp' => date('d.m.Y H:i:s'),
+            'external_id' => $this->uuid,
+            'service' => $this->info,
+            $receiptProperty => $this->receipt,
+        ];
+
+        if ($isCorrection) {
+            $params['correction_info'] = [
+                'type' => 'self',
+                'base_date' => date('d.m.Y')
+            ];
+        }
+
         return [
-            'json' => [
-                'timestamp' => date('d.m.Y H:i:s'),
-                'external_id' => $this->uuid,
-                'service' => $this->info,
-                $receiptProperty => $this->receipt,
-            ],
+            'json' => $params,
             'headers' => [
                 'Token' => $this->token,
             ],
