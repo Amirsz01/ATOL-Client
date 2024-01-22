@@ -79,6 +79,7 @@ class Receipt implements \JsonSerializable
      */
     private $additional_check_props;
     private $isCorrection = false;
+    private $baseDate;
 
 
     /**
@@ -395,7 +396,19 @@ class Receipt implements \JsonSerializable
 
         return [
             'type' => 'self',
-            'base_date' => date('d.m.Y'),
+            'base_date' => $this->getBaseDate(),
         ];
+    }
+
+    private function getBaseDate(): string
+    {
+        return $this->baseDate;
+    }
+
+    private function setBaseDate(string $baseDate): Receipt
+    {
+        $this->baseDate = $baseDate;
+
+        return $this;
     }
 }
