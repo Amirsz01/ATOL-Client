@@ -75,8 +75,6 @@ class Receipt implements \JsonSerializable
     /**
      * Дополнительный реквизит чека.
      * Максимальная длина строки – 16 символов.
-     * @todo Убрать? В v4 отсутствует в документации
-     *
      * @var string
      */
     private $additional_check_props;
@@ -84,9 +82,9 @@ class Receipt implements \JsonSerializable
 
 
     /**
-     * @return UserProp
+     * @return UserProp|null
      */
-    public function getAdditionalUserProps(): UserProp
+    public function getAdditionalUserProps(): ?UserProp
     {
         return $this->additional_user_props;
     }
@@ -95,35 +93,37 @@ class Receipt implements \JsonSerializable
     /**
      * @param string $name
      * @param string $value
+     * @return Receipt
      */
-    public function setAdditionalUserProps(string $name, string $value): void
+    public function setAdditionalUserProps(string $name, string $value): Receipt
     {
         $this->additional_user_props = new UserProp($name, $value);
+
+        return $this;
     }
 
 
     /**
      * @return string
      */
-    public function getAdditionalCheckProps(): string
+    public function getAdditionalCheckProps(): ?string
     {
         return $this->additional_check_props;
     }
 
 
-    /**
-     * @param string $additional_check_props
-     */
-    public function setAdditionalCheckProps(string $additional_check_props): void
+    public function setAdditionalCheckProps(?string $additional_check_props): Receipt
     {
         $this->additional_check_props = $additional_check_props;
+
+        return $this;
     }
 
 
     /**
      * @return array|null
      */
-    public function getVats()
+    public function getVats(): ?array
     {
         return $this->vats;
     }
@@ -156,7 +156,7 @@ class Receipt implements \JsonSerializable
     /**
      * @return AgentInfo
      */
-    public function getAgentInfo()
+    public function getAgentInfo(): AgentInfo
     {
         return $this->agent_info;
     }
@@ -379,7 +379,9 @@ class Receipt implements \JsonSerializable
             'vats' => $this->getVats(),
             'agent_info' => $this->getAgentInfo(),
             'supplier_info' => $this->getSupplierInfo(),
-            'correction_info' => $this->getCorrectionInfo()
+            'correction_info' => $this->getCorrectionInfo(),
+            'additional_user_props' => $this->getAdditionalUserProps(),
+            'additional_check_props' => $this->getAdditionalCheckProps(),
         ], static function ($property) {
             return !is_null($property);
         });
