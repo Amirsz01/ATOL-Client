@@ -405,7 +405,7 @@ class Receipt implements \JsonSerializable
         return $this->baseDate;
     }
 
-    private function setBaseDate(string $baseDate): Receipt
+    public function setBaseDate(string $baseDate): Receipt
     {
         $this->baseDate = $baseDate;
 
