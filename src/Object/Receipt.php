@@ -157,18 +157,18 @@ class Receipt implements \JsonSerializable
     /**
      * @return AgentInfo
      */
-    public function getAgentInfo(): AgentInfo
+    public function getAgentInfo(): ?AgentInfo
     {
         return $this->agent_info;
     }
 
 
     /**
-     * @param AgentInfo $agent_info
+     * @param ?AgentInfo $agent_info
      *
      * @return Receipt
      */
-    public function setAgentInfo(AgentInfo $agent_info): self
+    public function setAgentInfo(?AgentInfo $agent_info): self
     {
         $this->agent_info = $agent_info;
         return $this;
