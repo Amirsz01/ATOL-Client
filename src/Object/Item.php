@@ -385,11 +385,23 @@ class Item implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * @return array|null
      */
-    public function getMark(): ?string
+    public function getMark(): ?array
     {
-        return $this->mark;
+        $mark = $this->mark;
+        if ($mark && strlen($mark) > 50) {
+            return ['gs1m' => $mark];
+        }
+
+        if ($mark) {
+            if (strpos($mark, '==') === strlen($mark) - 2) {
+                $mark = base64_decode($mark);
+            }
+            return ['short' => $mark];
+        }
+
+        return null;
     }
 
 
@@ -400,14 +412,7 @@ class Item implements \JsonSerializable
      */
     public function setMark(?string $mark): self
     {
-        if ($mark && strlen($mark) > 50) {
-            $this->mark = ['gs1m' => $mark];
-        } elseif ($mark) {
-            if (strpos($mark, '==') === strlen($mark) - 2) {
-                $mark = base64_decode($mark);
-            }
-            $this->mark = ['short' => $mark];
-        }
+        $this->mark = $mark;
 
         return $this;
     }
