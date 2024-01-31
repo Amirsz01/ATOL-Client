@@ -12,7 +12,7 @@ namespace Grokhotov\ATOL\Object;
 class Item implements \JsonSerializable
 {
 
-    private const MARK_PROCESSING_MODE = 0;
+    private const MARK_PROCESSING_MODE = "0";
 
     private $sum = 0.0;
 
