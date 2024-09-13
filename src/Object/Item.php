@@ -184,7 +184,7 @@ class Item implements \JsonSerializable
      */
     public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->name = mb_substr($name, 128);
         return $this;
     }
 
