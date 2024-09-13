@@ -102,12 +102,12 @@ class Item implements \JsonSerializable
     {
         $result = [
             'name' => $this->getName(),
-            'price' => $this->getPrice(),
+            'price' => round($this->getPrice(), 2),
             'quantity' => $this->getQuantity(),
-            'sum' => $this->getSum(),
+            'sum' => round($this->getSum(), 2),
             'vat' => [
                 'type' => $this->getVat(),
-                'sum' => $this->getVatSum(),
+                'sum' => round($this->getVatSum(), 2),
             ],
             'payment_object' => $this->getPaymentObject(),
             'payment_method' => $this->getPaymentMethod(),
