@@ -70,7 +70,7 @@ class UserProp implements \JsonSerializable
      */
     public function setName(string $name): self
     {
-        $this->name = mb_substr($name, 64);
+        $this->name = mb_substr($name, 0, 64);
         return $this;
     }
 
@@ -91,7 +91,7 @@ class UserProp implements \JsonSerializable
      */
     public function setValue(string $value): self
     {
-        $this->value = mb_substr($value, 256);
+        $this->value = mb_substr($value, 0, 256);
         return $this;
     }
 }

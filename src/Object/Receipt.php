@@ -269,7 +269,7 @@ class Receipt implements \JsonSerializable
      */
     public function setCashier(string $cashier): self
     {
-        $this->cashier = mb_substr($cashier, 64);
+        $this->cashier = mb_substr($cashier, 0, 64);
         return $this;
     }
 
