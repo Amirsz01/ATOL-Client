@@ -82,7 +82,7 @@ class Vat implements \JsonSerializable
     {
         return [
             'type'  => $this->type,
-            'sum'   => $this->sum
+            'sum'   => round($this->sum, 2)
         ];
     }
 
