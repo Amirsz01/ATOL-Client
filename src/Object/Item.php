@@ -60,6 +60,12 @@ class Item implements \JsonSerializable
      */
     private $mark;
 
+    /**
+     * Дополнительный реквизит предмета расчета
+     *
+     * @var string
+     */
+    private $userData;
 
     /**
      * Продаваемый товар по чеку.
@@ -114,6 +120,7 @@ class Item implements \JsonSerializable
             'agent_info' => $this->getAgentInfo(),
             'measure' => $this->getMeasure(),
             'supplier_info' => $this->getSupplierInfo(),
+            'user_data' => $this->getUserData(),
         ];
 
         if ($this->getMark()) {
@@ -125,7 +132,6 @@ class Item implements \JsonSerializable
             return !is_null($property);
         });
     }
-
 
     /**
      * @return AgentInfo|null
@@ -413,6 +419,19 @@ class Item implements \JsonSerializable
     public function setMark(?string $mark): self
     {
         $this->mark = $mark;
+
+        return $this;
+    }
+
+
+    public function getUserData(): ?string
+    {
+        return $this->userData;
+    }
+
+    public function setUserData(string $userData): self
+    {
+        $this->userData = $userData;
 
         return $this;
     }
