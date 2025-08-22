@@ -81,6 +81,13 @@ class Receipt implements \JsonSerializable
     private $isCorrection = false;
     private $baseDate;
 
+    /**
+     * Признак онлайн-продажи
+     *
+     * @var bool
+     */
+    private $internet;
+
 
     /**
      * @return UserProp|null
@@ -383,6 +390,7 @@ class Receipt implements \JsonSerializable
             'correction_info' => $this->getCorrectionInfo(),
             'additional_user_props' => $this->getAdditionalUserProps(),
             'additional_check_props' => $this->getAdditionalCheckProps(),
+            'internet' => $this->isInternet(),
         ], static function ($property) {
             return !is_null($property);
         });
@@ -409,6 +417,17 @@ class Receipt implements \JsonSerializable
     {
         $this->baseDate = $baseDate;
 
+        return $this;
+    }
+
+    public function isInternet(): bool
+    {
+        return $this->internet;
+    }
+
+    public function setInternet(bool $internet): self
+    {
+        $this->internet = $internet;
         return $this;
     }
 }

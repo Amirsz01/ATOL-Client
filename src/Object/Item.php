@@ -68,13 +68,6 @@ class Item implements \JsonSerializable
     private $userData;
 
     /**
-     * Признак онлайн-продажи
-     *
-     * @var bool
-     */
-    private $internet;
-
-    /**
      * Продаваемый товар по чеку.
      *
      * @param string $name
@@ -128,7 +121,6 @@ class Item implements \JsonSerializable
             'measure' => $this->getMeasure(),
             'supplier_info' => $this->getSupplierInfo(),
             'user_data' => $this->getUserData(),
-            'internet' => $this->isInternet(),
         ];
 
         if ($this->getMark()) {
@@ -441,17 +433,6 @@ class Item implements \JsonSerializable
     {
         $this->userData = $userData;
 
-        return $this;
-    }
-
-    public function isInternet(): bool
-    {
-        return $this->internet;
-    }
-
-    public function setInternet(bool $internet): self
-    {
-        $this->internet = $internet;
         return $this;
     }
 }
