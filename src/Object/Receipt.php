@@ -88,6 +88,12 @@ class Receipt implements \JsonSerializable
      */
     private $internet;
 
+    /**
+     * Часовая зона (тег 1011)
+     *
+     * @var int|null
+     */
+    private $timezone;
 
     /**
      * @return UserProp|null
@@ -391,6 +397,7 @@ class Receipt implements \JsonSerializable
             'additional_user_props' => $this->getAdditionalUserProps(),
             'additional_check_props' => $this->getAdditionalCheckProps(),
             'internet' => $this->isInternet(),
+            'timezone' => $this->getTimezone()
         ], static function ($property) {
             return !is_null($property);
         });
@@ -428,6 +435,17 @@ class Receipt implements \JsonSerializable
     public function setInternet(bool $internet): self
     {
         $this->internet = $internet;
+        return $this;
+    }
+
+    public function getTimezone(): ?int
+    {
+        return $this->timezone;
+    }
+
+    public function setTimezone(?int $timezone): self
+    {
+        $this->timezone = $timezone;
         return $this;
     }
 }
