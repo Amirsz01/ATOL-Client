@@ -273,12 +273,18 @@ class Item implements \JsonSerializable
             case (Vat::TAX_VAT20):
                 $this->setVatSum($this->getPrice() * $this->getQuantity() * 0.2);
                 break;
+            case (Vat::TAX_VAT22):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 0.22);
+                break;
             case (Vat::TAX_VAT20Z):
                 $this->setVatSum($this->getPrice() * $this->getQuantity() * 20 / 120);
                 $this->vat = Vat::TAX_VAT20;
                 break;
             case (Vat::TAX_VAT120):
                 $this->setVatSum($this->getPrice() * $this->getQuantity() * 20 / 120);
+                break;
+            case (Vat::TAX_VAT122):
+                $this->setVatSum($this->getPrice() * $this->getQuantity() * 22 / 122);
                 break;
             case (Vat::TAX_VAT0):
             case (Vat::TAX_NONE):

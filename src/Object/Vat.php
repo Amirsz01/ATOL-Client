@@ -48,9 +48,19 @@ class Vat implements \JsonSerializable
     public const TAX_VAT20 = 'vat20';
 
     /**
+     * НДС чека по ставке 22%.
+     */
+    public const TAX_VAT22 = 'vat22';
+
+    /**
      * НДС чека по расчетной ставке 20/120.
      */
     public const TAX_VAT120 = 'vat120';
+
+    /**
+     * НДС чека по расчетной ставке 22/122.
+     */
+    public const TAX_VAT122 = 'vat122';
 
     public const TAX_VAT10Z = 'vat10Z';
 
