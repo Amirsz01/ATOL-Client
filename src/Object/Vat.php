@@ -66,6 +66,8 @@ class Vat implements \JsonSerializable
 
     public const TAX_VAT20Z = 'vat20Z';
 
+    public const TAX_VAT22Z = 'vat22Z';
+
     /**
      * Вид налога.
      *
