@@ -39,13 +39,16 @@ class OperationRequest implements RequestInterface
 
     private $operation;
 
+    private $permissiveMode;
+
     public function __construct(
         $groupId,
         $operation,
         $uuid,
         Receipt $receipt,
         Info $info,
-        TokenResponse $token
+        TokenResponse $token,
+        bool $permissiveMode = false
     )
     {
         $this->groupId = $groupId;
@@ -54,6 +57,7 @@ class OperationRequest implements RequestInterface
         $this->receipt = $receipt;
         $this->info = $info;
         $this->token = $token->getToken();
+        $this->permissiveMode = $permissiveMode;
     }
 
 
@@ -87,6 +91,11 @@ class OperationRequest implements RequestInterface
             'service' => $this->info,
             $receiptProperty => $this->receipt,
         ];
+
+        if ($this->permissiveMode) {
+            $params['use_tspiot'] = true;
+            $params['permissive_mode'] = true;
+        }
 
         return [
             'json' => $params,
